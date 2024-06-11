@@ -9,7 +9,7 @@
 
         <TransitionGroup name="lista" tag="ul" >            
              <task  v-if="store.token==null" v-for="(x) in localTasks" :text=x.descripcion  :status="x.status"  :id="x._id" :key="x._id" @handledeleted="handleDeleteLocal" ></task>
-             <task  v-else v-for="(x) in userTask" :text=x.descripcion  :status=x.status  :id="x._id" :key="x._id+x" @deleting="deleteTaskHome" ></task>
+             <task  v-else v-for="(x) in userTask" :text=x.descripcion  :status=x.status  :id="x._id" :key="x._id+x.descripcion" @deleting="deleteTaskHome" ></task>
         </TransitionGroup>        
 
         <h1 v-if="checkTasks" class="without">without tasks</h1>
@@ -46,20 +46,25 @@ const addNewTaskLocal = (task : Tasks) => {
     localTasks.value.push(task)
 }
 
-const addNewTaskUser = async (task:Tasks) => {        
-    const status : ResponseErrores = await addTask(task,store.token)          
+const addNewTaskUser = async (task:Tasks) => {   
     
-    if(status.NoError){
-        await manageGetTasks()
-    }else{
-
-        if(status.AuthError){
-            manageLogOut()
+    if(store.token !== null){        
+        const status : ResponseErrores = await addTask(task,store.token.toString())          
+    
+        if(status.NoError){
+            await manageGetTasks()
         }else{
-            alert('Please Try Later')
+
+            if(status.AuthError){
+                manageLogOut()
+            }else{
+                alert('Please Try Later')
+            }
+
         }
 
-    }
+    }     
+    
 }
 
 
@@ -84,19 +89,22 @@ const checkTasks = computed(() => {
 
 const deleteTaskHome = async (id:string) => {
     
-    const status : ResponseErrores = await deleteTask(store.token,id)
+    if(store.token !== null){      
+        const status : ResponseErrores = await deleteTask(store.token.toString(),id)
 
-    if(status.NoError){
-        await manageGetTasks()
-    }else{
-
-
-        if(status.AuthError){
-            manageLogOut()
+        if(status.NoError){
+            await manageGetTasks()
         }else{
-            alert('Error when deleting')
+
+
+            if(status.AuthError){
+                manageLogOut()
+            }else{
+                alert('Error when deleting')
+            }
         }
     }
+    
 
 }
 

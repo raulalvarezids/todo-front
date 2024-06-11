@@ -24,7 +24,7 @@ export const getTasks = async (token:String) : Promise<GetTasks>  =>  {
     .then(response => {               
         data.data=response.data
     })
-    .catch(error => {                                
+    .catch(() => {                                
         data.error=true    
     })
 
@@ -46,7 +46,7 @@ export const updateTask = async (token:String,status:boolean,id? : string)  : Pr
     }
 
     await axios.patch(url+'/tasks/'+id,{status:status},headers)
-    .then(response => statusResponse.NoError=true)
+    .then(() => statusResponse.NoError=true)
     .catch(error => {        
                          
 
@@ -75,7 +75,7 @@ export const deleteTask = async (token:string,id:string) : Promise<ResponseError
     }
 
     await axios.delete(url+'/tasks/'+id,headers)
-    .then(response => status.NoError=true)
+    .then(() => status.NoError=true)
     .catch(error => {        
                          
 
@@ -105,7 +105,7 @@ export const addTask = async (task:Tasks,token:string) : Promise<ResponseErrores
     }
 
     await axios.post(url+'/tasks',task,headers)
-    .then(response => status.NoError=true)
+    .then(() => status.NoError=true)
     .catch(error =>  {        
                         
         if(error.response.data.statusCode == 401){

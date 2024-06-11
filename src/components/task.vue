@@ -16,7 +16,7 @@
 <script lang="ts" setup>
 import {  ref } from 'vue';
 import { useUserStore } from '../store/user';
-import { deleteTask, updateTask } from '../utils/FetchingTasks';
+import {  updateTask } from '../utils/FetchingTasks';
 import { ResponseErrores } from '../interfaces/response';
 
 const store = useUserStore()
